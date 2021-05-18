@@ -1,0 +1,19 @@
+# Python
+.python-version
+*.ipynb
+
+# TensorFlow
+*.pb
+*.index
+*.data-*
+
+# Serverless
+.serverless
+.requirements.zip
+node_modules
+
+# IDE
+.idea
+
+# MAC
+.DS_Store

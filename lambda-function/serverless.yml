@@ -1,0 +1,52 @@
+service: imagenet
+
+custom:
+  pythonRequirements:
+    useDownloadCache: false
+    useStaticCache: false
+    dockerizePip: true
+    zip: true
+    slim: true
+    slimPatterns:
+      - "**/grpc"
+      - "**/markdown"
+      - "**/numpy"
+      - "**/pkg_resources"
+      - "**/setuptools"
+      - "**/tensorboard/plugins"
+      - "**/tensorboard/webfiles.zip"
+      - "**/tensorflow_core/contrib"
+      - "**/tensorflow_core/examples"
+      - "**/tensorflow_core/include"
+      - "**/tensorflow_estimator"
+      - "**/werkzeug"
+      - "**/wheel"
+  requirementsService: imagenet-layer
+  requirementsExport: ImagenetLayer
+  requirementsLayer: ${cf:${self:custom.requirementsService}-${self:provider.stage}.${self:custom.requirementsExport}}
+
+provider:
+  name: aws
+  runtime: python3.7
+  stage: dev
+  region: ap-northeast-1
+  iamRoleStatements:
+      - Effect: "Allow"
+        Action:
+          - s3:ListBucket
+          - s3:GetObject
+        Resource:
+          - "arn:aws:s3::*"
+
+functions:
+  classify:
+    handler: app.handler
+    memorySize: 2048
+    timeout: 60
+    layers:
+      - ${self:custom.requirementsLayer}
+    environment:
+      MODEL_BUCKET: ${opt:modelBucket}
+      MODEL_KEY: ${opt:modelKey}
+plugins:
+  - serverless-python-requirements

@@ -1,0 +1,26 @@
+service: imagenet-layer
+plugins:
+  - serverless-python-requirements
+custom:
+  pythonRequirements:
+    useDownloadCache: false
+    useStaticCache: false
+    dockerizePip: true
+    layer:
+      compatibleRuntimes:
+        - python3.7
+    slim: true
+    slimPatterns:
+      - "**/tests"
+
+provider:
+  name: aws
+  runtime: python3.7
+  stage: dev
+  region: ap-northeast-1
+
+resources:
+  Outputs:
+    ImagenetLayer:
+      Value:
+        Ref: PythonRequirementsLambdaLayer
