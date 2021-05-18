@@ -2,6 +2,12 @@
 ここは、AWS Lambda上でTensorFlowを動かすサンプルのリポジトリです。
 
 ## 共通
+### Serverless Frameworkのインストール
+```
+$ npm install -g serverless
+$ npm install --save serverless-python-requirements
+```
+
 ### Saved modelの出力
 ```bash
 $ python model_exporter.py \
